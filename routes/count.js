@@ -86,4 +86,17 @@ router.get('/retrieve/:symbol', (req, res, next) => {
   });
 });
 
+router.get('/retrieve/all/:symbol', (req, res, next) => {
+  let reqData = req.params.symbol;
+
+  Count.getCount(reqData, (err, data) => {
+    if(err) throw err;
+    if(data === null) {
+      res.send({success: false, msg: 'Failed to find data', err});
+    } else {
+      res.json(data);
+    }
+  });
+});
+
 module.exports = router;

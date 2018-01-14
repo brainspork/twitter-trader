@@ -26,8 +26,14 @@ module.exports.addCount = function(data, callback) {
   data.save(callback);
 }
 
-module.exports.getCount = function(symbol, callback) {
+module.exports.getNewstCount = function(symbol, callback) {
   const query = {name: symbol};
   const sort = {sort: {date: -1}};
   Count.findOne(query, {}, sort, callback);
+}
+
+module.exports.getAllCount = function(symbol, callback) {
+  const query = {name: symbol};
+
+  Count.find(query, callback);
 }
