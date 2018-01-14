@@ -17,12 +17,8 @@ mongoose.connection.on('connected', () => {
   console.log('Connected to database ' + configDatabase.database);
 });
 
-
-app.use(express.static('./public'));
-
-
 app.get('/', function(req, res) {
-  res.send('index.html', {root: './public'});
+  res.send('Please use api endpoint');
 });
 
 app.use('/api/tracker', Count);
