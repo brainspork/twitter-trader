@@ -20,7 +20,7 @@ router.post('/count/:symbol', (req, res, next) => {
   let prevData;
 
   // Check db for a previous count object
-  Count.getCount(reqData, (err, count) => {
+  Count.getNewestCount(reqData, (err, count) => {
     if(err) throw err;
     if(count == null) {
       twitter.getSearch({'q':'$' + reqData + ' -filter:retweets','count': 100, 'result_type': 'recent'}, error, success);
@@ -76,7 +76,7 @@ router.post('/count/:symbol', (req, res, next) => {
 router.get('/retrieve/:symbol', (req, res, next) => {
   let reqData = req.params.symbol;
 
-  Count.getCount(reqData, (err, data) => {
+  Count.getNewestCount(reqData, (err, data) => {
     if(err) throw err;
     if(data === null) {
       res.send({success: false, msg: 'Failed to find data', err});
@@ -89,7 +89,7 @@ router.get('/retrieve/:symbol', (req, res, next) => {
 router.get('/retrieve/all/:symbol', (req, res, next) => {
   let reqData = req.params.symbol;
 
-  Count.getCount(reqData, (err, data) => {
+  Count.getAllCount(reqData, (err, data) => {
     if(err) throw err;
     if(data === null) {
       res.send({success: false, msg: 'Failed to find data', err});
