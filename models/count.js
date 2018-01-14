@@ -28,6 +28,6 @@ module.exports.addCount = function(data, callback) {
 
 module.exports.getCount = function(symbol, callback) {
   const query = {name: symbol};
-  const sort = {date: -1};
+  const sort = {sort: {date: -1}};
   Count.findOne(query, {}, sort, callback);
 }
