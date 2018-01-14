@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const configDatabase = require('./config/database');
 const configTwitter = require('./config/twitter');
@@ -20,6 +21,8 @@ mongoose.connection.on('connected', () => {
 app.get('/', function(req, res) {
   res.send('Please use api endpoint');
 });
+
+app.use(cors());
 
 app.use('/api/tracker', Count);
 
