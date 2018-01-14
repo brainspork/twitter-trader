@@ -4,6 +4,7 @@ const Count = require('../models/count');
 const Twitter = require('twitter-node-client').Twitter;
 const configTwitter = require('../config/twitter');
 
+// Twitter cli connection
 const twitter = new Twitter({
   "consumerKey" : configTwitter.consumerKey,
   "consumerSecret" : configTwitter.consumerSecret,
@@ -12,23 +13,30 @@ const twitter = new Twitter({
   "callBackUrl" : configTwitter.callBackUrl
 });
 
+// Post endpoint for count
+// Request param is text only stock symbol ie TSLA
 router.post('/count/:symbol', (req, res, next) => {
   let reqData = req.params.symbol;
-  let prevData = Count.getCount(reqData, (err, count) => {
+  let prevData;
+
+  // Check db for a previous count object
+  Count.getCount(reqData, (err, count) => {
     if(err) throw err;
-    if(count === null) {
-      return undefined;
+    if(count == null) {
+      twitter.getSearch({'q':'$' + reqData + ' -filter:retweets','count': 100, 'result_type': 'recent'}, error, success);
     } else {
-      return count;
+      console.log('Previous count doc found');
+      prevData = count;
+      twitter.getSearch({'q':'$' + reqData + ' -filter:retweets','count': 100, 'result_type': 'recent', 'since_id': prevData.prev_tweet_id}, error, success);
     }
   });
 
-  if(prevData != undefined) {
-    console.log('here');
-    twitter.getSearch({'q':'$' + reqData + ' -filter:retweets','count': 100, 'result_type': 'recent', 'since_id': prevData.prev_tweet_id}, error, success);
-  } else {
-    twitter.getSearch({'q':'$' + reqData + ' -filter:retweets','count': 100, 'result_type': 'recent'}, error, success);
-  }
+  // if(prevData != undefined) {
+  //   console.log('here');
+  //   twitter.getSearch({'q':'$' + reqData + ' -filter:retweets','count': 100, 'result_type': 'recent', 'since_id': prevData.prev_tweet_id}, error, success);
+  // } else {
+  //   twitter.getSearch({'q':'$' + reqData + ' -filter:retweets','count': 100, 'result_type': 'recent'}, error, success);
+  // }
 
   function error(err, response, body) {
     console.log('ERROR [%s]', JSON.parse(body));
