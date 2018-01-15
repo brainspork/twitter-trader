@@ -20,7 +20,7 @@ const CountSchema = mongoose.Schema({
   }
 });
 
-const Count = module.exports = mongoose.model('Count', CountSchema);
+const Minute = module.exports = mongoose.model('Minute', CountSchema);
 
 module.exports.addCount = function(data, callback) {
   data.save(callback);
@@ -29,11 +29,11 @@ module.exports.addCount = function(data, callback) {
 module.exports.getNewestCount = function(symbol, callback) {
   const query = {name: symbol};
   const sort = {sort: {date: -1}};
-  Count.findOne(query, {}, sort, callback);
+  Minute.findOne(query, {}, sort, callback);
 }
 
 module.exports.getAllCount = function(symbol, callback) {
   const query = {name: symbol};
 
-  Count.find(query, callback);
+  Minute.find(query, callback);
 }
